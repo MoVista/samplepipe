@@ -1,1 +1,34 @@
-https://github.com/MoVista/samplepipe.git
+apiVersion: v1
+kind: Service
+metadata:
+  name: toapp-service
+spec:
+  selector:
+    app: toapp
+  ports:
+  - protocol: "TCP"
+    port: 80
+    targetPort: 8501
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: toapp
+spec:
+  selector:
+    matchLabels:
+      app: toapp
+  replicas: 
+  template:
+    metadata:
+      labels:
+        app: toapp
+    spec:
+      containers:
+      - name: toapp
+        image: movista/test_asm:1.0.2
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8501
